@@ -1,3 +1,4 @@
+import os
 import streamlit as st
 import pandas as pd
 from datetime import datetime
@@ -102,8 +103,11 @@ def show_economic_trends():
 # Streamlit 앱
 st.title("📊 금융기관 정보")
 
-# CSV 파일 경로
-csv_file_path = 'C:/Users/Admin/Desktop/VE/fincorp/corpinfo.csv'
+# 현재 사용자 경로를 기반으로 CSV 파일 경로 생성
+base_dir = os.path.expanduser("~/Desktop/VE/fincorp")
+csv_file_path = os.path.join(base_dir, "corpinfo.csv")
+
+print(f"CSV 파일 경로: {csv_file_path}")
 
 # CSV 데이터 읽기
 def load_data_from_csv(file_path):
