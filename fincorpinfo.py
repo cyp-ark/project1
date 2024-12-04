@@ -32,20 +32,27 @@ def show_company_info():
         if selected_company:
             company_info = data[data["기업명"] == selected_company].iloc[0]
             
-            # 기업 정보 상세 표시
-            st.subheader(f"🏢 {company_info['기업명']}")
-            st.markdown(f"**산업:** {company_info['산업']}")
-            st.markdown(f"**설립일:** {company_info['설립일']}")
-            st.markdown(f"**자본금:** {company_info['자본금']}")
-            st.markdown(f"**매출액:** {company_info['매출액']}")
-            st.markdown(f"**대표자:** {company_info['대표자']}")
-            st.markdown(f"**주력 사업:** {company_info['주력 사업']}")
-            st.markdown(f"**최근 동향:** {company_info['최근 동향']}")
-            st.markdown(f"**주소:** {company_info['주소']}")
+            # 레이아웃 구성
+            st.markdown(
+                f"""
+                <div style="border: 1px solid #ddd; border-radius: 8px; padding: 20px; background-color: #f9f9f9;">
+                    <h3 style="color: #333;">🏢 {company_info['기업명']}</h3>
+                    <p><strong>산업:</strong> {company_info['산업']}</p>
+                    <p><strong>주소:</strong> {company_info['주소']}</p>
+                    <p><strong>설립일:</strong> {company_info['설립일']}</p>
+                    <p><strong>자본금:</strong> {company_info['자본금']}</p>
+                    <p><strong>매출액:</strong> {company_info['매출액']}</p>
+                    <p><strong>대표자:</strong> {company_info['대표자']}</p>
+                    <p><strong>주력 사업:</strong> {company_info['주력 사업']}</p>
+                    <p><strong>최근 동향:</strong> {company_info['최근 동향']}</p>
+                </div>
+                """,
+                unsafe_allow_html=True,
+            )
 
             # 이미지 표시 (이미지 경로가 포함된 경우)
             if pd.notna(company_info['이미지 경로']):
-                st.image(company_info['이미지 경로'], caption=f"{company_info['기업명']} 로고")
+                st.image(company_info['이미지 경로'], caption=f"{company_info['기업명']} 로고", use_column_width=True)
 
         # 모든 기업 정보 보기 옵션
         if st.checkbox("모든 기업 정보 보기"):
@@ -53,4 +60,3 @@ def show_company_info():
 
     else:
         st.warning("데이터를 불러올 수 없습니다. CSV 파일을 확인해주세요.")
-
