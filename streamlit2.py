@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+import plotly.graph_objects as go
 
 # 데이터 입력
 data = {
@@ -25,15 +26,62 @@ st.write("주어진 급여 데이터를 바탕으로 분석 결과를 시각화�
 # 데이터프레임 표시
 st.dataframe(df)
 
-# 선형 차트: 연도별 기본급 변화
-st.subheader("연도별 기본급 변화")
-st.line_chart(df.set_index("구분").loc["기본급"].T)
+# 레이아웃 설정: 세 개의 그래프를 한 줄로 배치
+col1, col2, col3 = st.columns(3)
 
-# 선형 차트: 연도별 성과상여금 변화
-st.subheader("연도별 성과상여금 변화")
-st.line_chart(df.set_index("구분").loc["성과상여금"].T)
+# 기본급 변화 (히스토그램 스타일, Plotly로 확대)
+with col1:
+    st.subheader("기본급 변화 (확대)")
+    basic_salary = df.set_index("구분").loc["기본급"]
+    basic_salary_data = pd.DataFrame({
+        "년도": ["2020년 결산", "2021년 결산", "2022년 결산", "2023년 결산", "2024년 예산"],
+        "기본급": basic_salary.values
+    })
+    fig = go.Figure(data=[
+        go.Bar(x=basic_salary_data["년도"], y=basic_salary_data["기본급"], marker_color='skyblue')
+    ])
+    fig.update_layout(
+        yaxis=dict(range=[50000, 60000]),  # y축 범위 설정
+        title="기본급 변화",
+        xaxis_title="년도",
+        yaxis_title="금액 (천 원)",
+    )
+    st.plotly_chart(fig)
 
-# 선형 차트: 평균근속연수 변화
-st.subheader("평균근속연수 변화")
-st.line_chart(df.set_index("구분").loc["평균근속연수"].T)
+# 성과상여금 변화 (선형 차트, Plotly로 확대)
+with col2:
+    st.subheader("성과상여금 변화 (확대)")
+    performance_bonus = df.set_index("구분").loc["성과상여금"].replace("-", 0).astype(float)
+    performance_data = pd.DataFrame({
+        "년도": ["2020년 결산", "2021년 결산", "2022년 결산", "2023년 결산", "2024년 예산"],
+        "성과상여금": performance_bonus.values
+    })
+    fig = go.Figure(data=[
+        go.Scatter(x=performance_data["년도"], y=performance_data["성과상여금"], mode='lines+markers', line=dict(color='orange'))
+    ])
+    fig.update_layout(
+        yaxis=dict(range=[25000, 40000]),  # y축 범위 설정
+        title="성과상여금 변화",
+        xaxis_title="년도",
+        yaxis_title="금액 (천 원)",
+    )
+    st.plotly_chart(fig)
 
+# 평균근속연수 변화 (선형 차트, Plotly로 확대)
+with col3:
+    st.subheader("평균근속연수 변화 (확대)")
+    tenure = df.set_index("구분").loc["평균근속연수"]
+    tenure_data = pd.DataFrame({
+        "년도": ["2020년 결산", "2021년 결산", "2022년 결산", "2023년 결산", "2024년 예산"],
+        "평균근속연수": tenure.values
+    })
+    fig = go.Figure(data=[
+        go.Scatter(x=tenure_data["년도"], y=tenure_data["평균근속연수"], mode='lines+markers', line=dict(color='green'))
+    ])
+    fig.update_layout(
+        yaxis=dict(range=[16, 18]),  # y축 범위 설정
+        title="평균근속연수 변화",
+        xaxis_title="년도",
+        yaxis_title="근속연수 (년)",
+    )
+    st.plotly_chart(fig)
