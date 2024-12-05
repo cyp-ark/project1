@@ -91,10 +91,14 @@ def plot_tows_with_labels(data):
         ax.add_patch(wedge)
 
     # 텍스트 추가
-    ax.text(-0.7, 0.7, "Threat\n(위협)\n" + "\n".join(data[categories[0]]), ha='center', fontsize=10, color='blue')
-    ax.text(0.7, 0.7, "Opportunity\n(기회)\n" + "\n".join(data[categories[1]]), ha='center', fontsize=10, color='orange')
-    ax.text(0.7, -0.7, "Weakness\n(약점)\n" + "\n".join(data[categories[2]]), ha='center', fontsize=10, color='green')
-    ax.text(-0.7, -0.7, "Strength\n(강점)\n" + "\n".join(data[categories[3]]), ha='center', fontsize=10, color='red')
+    positions = [(-0.7, 0.7), (0.7, 0.7), (0.7, -0.7), (-0.7, -0.7)]
+    text_colors = ['blue', 'orange', 'green', 'red']
+
+    for idx, (pos, category) in enumerate(zip(positions, categories)):
+        text_content = f"{category}\n" + "\n".join(data[category][:4])  # 최대 4개의 항목 표시
+        ax.text(pos[0], pos[1], text_content, ha='center', fontsize=10, color=text_colors[idx])
+
+    # 중앙에 TOWS 표시
     ax.text(0, 0, "TOWS", ha='center', va='center', fontsize=16, fontweight='bold')
 
     # 시각화 조정
@@ -105,23 +109,22 @@ def plot_tows_with_labels(data):
     st.pyplot(fig)
 
 # Streamlit 앱
-st.title("🔍KDB산업은행 TOWS 분석 시각화")
+st.title("🔍 KDB산업은행 TOWS 분석 시각화")
 st.write("OpenAI의 GPT를 사용하여 TOWS 분석을 생성하고 시각화합니다.")
 
 # 사용자 입력
-company_name = "KDB산업은행"
-st.write(f"분석 대상: {company_name}")
+company_name = st.text_input("분석 대상 회사명을 입력하세요:", "KDB산업은행")
+if st.button("TOWS 분석 생성"):
+    # TOWS 분석 생성
+    analysis = generate_tows_analysis(company_name)
+    if "에러 발생" not in analysis:
+        # 분석 결과 출력
+        st.subheader("TOWS 분석 결과")
+        st.markdown(f"```\n{analysis}\n```")
 
-# TOWS 분석 생성
-analysis = generate_tows_analysis(company_name)
-if "에러 발생" not in analysis:
-    # 분석 결과 출력
-    st.subheader("TOWS 분석 결과")
-    st.text(analysis)
-
-    # 분석 결과 시각화
-    tows_dict = parse_tows_analysis(analysis)
-    st.subheader("TOWS 분석 시각화")
-    plot_tows_with_labels(tows_dict)
-else:
-    st.error(analysis)
+        # 분석 결과 시각화
+        tows_dict = parse_tows_analysis(analysis)
+        st.subheader("TOWS 분석 시각화")
+        plot_tows_with_labels(tows_dict)
+    else:
+        st.error(f"오류 발생: {analysis}")
