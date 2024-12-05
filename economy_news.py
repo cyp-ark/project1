@@ -8,7 +8,7 @@ import streamlit as st
 def show_economic_trends():
     
     """키워드별 최근 이슈를 표시하는 섹션"""
-    st.subheader("📈 11월 마지막주 경제뉴스 헤드라인")
+    st.subheader("📈 11월 경제뉴스 헤드라인")
 
     st.markdown(
                     f'''
@@ -23,6 +23,7 @@ def show_economic_trends():
                 )
     
     st.subheader('🔑 경제 키워드 분석')
-    st.latex('E = mc^2')
+    st.image("./image/wordcloud.png",use_column_width=False)
     
     st.subheader('📉 경제 트렌드 분석')
+    st.image("./image/trend.png",use_column_width=False)
