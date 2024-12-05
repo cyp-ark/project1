@@ -105,7 +105,7 @@ def plot_tows_with_labels(data):
     st.pyplot(fig)
 
 # Streamlit 앱
-st.title("KDB산업은행 TOWS 분석 시각화")
+st.title("🔍KDB산업은행 TOWS 분석 시각화")
 st.write("OpenAI의 GPT를 사용하여 TOWS 분석을 생성하고 시각화합니다.")
 
 # 사용자 입력
