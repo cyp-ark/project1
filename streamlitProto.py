@@ -4,6 +4,7 @@ import pandas as pd
 from chatbot import show_chatbot
 from economy_news import show_economic_trends
 from fincorpinfo import show_company_info
+from calendar_app import CalendarApp
 
 # 사이드바 네비게이션
 def show_sidebar_navigation():
@@ -14,9 +15,10 @@ def show_sidebar_navigation():
         st.session_state["section"] = "경제 현황"
     if st.sidebar.button("🏢 금융 공기업 정보"):
         st.session_state["section"] = "기업 동향"
+    if st.sidebar.button("🏢 면접 예상 질문"):
+        st.session_state["section"] = "면접 질문"
     if st.sidebar.button("🤖 챗봇"):
         st.session_state["section"] = "챗봇"
-        
     if st.sidebar.button("📅 채용 달력"):
         st.session_state["section"] = "채용 달력"
 
@@ -35,10 +37,16 @@ def main():
         show_economic_trends()    
     elif st.session_state["section"] == "기업 동향":
         show_company_info()
+    elif st.session_state["section"] == "면접 질문":
+        st.write('면접 질문')
     elif st.session_state["section"] == "챗봇":
         show_chatbot()
     elif st.session_state["section"] == "채용 달력":
-        st.write("채용 달력을 준비중입니다.")
+        # CalendarApp 객체 생성
+        app = CalendarApp()
+
+        # 캘린더 렌더링
+        app.render()
         
 
 # 앱 실행
