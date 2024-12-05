@@ -65,7 +65,7 @@ class CalendarApp:
                     )
 
     def render(self):
-        st.title("캘린더 일정")
+        st.title("📅금융권 채용&자격증 캘린더")
         calendar(events=self.calendar_events, options=self.calendar_options)
 
 
