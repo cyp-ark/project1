@@ -18,7 +18,7 @@ def load_data_from_csv(file_path):
 
 # 특정 기업 정보 표시 함수
 def display_company_info(company_info):
-    st.markdown(
+    '''st.markdown(
         f"""
         <div>
             <h3>🏢 {company_info['기업명']}</h3>
@@ -54,21 +54,45 @@ def display_company_info(company_info):
         </div>
         """,
         unsafe_allow_html=True,
-    )
+    )'''
+    
     
     st.subheader(f"{company_info['기업명']} 최신 헤드라인")
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        
+        st.markdown(
+                        f'''
+                        <div style="border: 1px solid #ddd; border-radius: 8px; padding: 20px; background-color: #f9f9f9;">
+                            <p> 1. "글로벌 주요 증시, 미국 소비자물가 30년 만에 최고치 상승"</p>
+                            <p> 2. "미국 신규 실업수당 신청, 예상치 상회"</p>
+                            <p> 3. "중국 경제성장률, 전 분기 대비 하락세"</p>
+                            <p> 4. "유럽 연합, 코로나19로 인한 경제 위기 극복을 위한 경제 지원안 추진"</p>
+                        </div>
+                        ''',
+                        unsafe_allow_html=True,
+                    )
+    with col2:
+        if pd.notna(company_info['이미지 경로']):
+            st.image(company_info['이미지 경로'], use_column_width=True)
+    
+    st.subheader(f"{company_info['기업명']} 기업 정보")
+    
     st.markdown(
-                    f'''
-                    <div style="border: 1px solid #ddd; border-radius: 8px; padding: 20px; background-color: #f9f9f9;">
-                        <p> 1. "글로벌 주요 증시, 미국 소비자물가 30년 만에 최고치 상승"</p>
-                        <p> 2. "미국 신규 실업수당 신청, 예상치 상회"</p>
-                        <p> 3. "중국 경제성장률, 전 분기 대비 하락세"</p>
-                        <p> 4. "유럽 연합, 코로나19로 인한 경제 위기 극복을 위한 경제 지원안 추진"</p>
-                    </div>
-                    ''',
-                    unsafe_allow_html=True,
-                )
-    st.subheader(f"{company_info['기업명']} 키워드 분석")
+            f"""
+            <div style="border: 1px solid #ddd; border-radius: 8px; padding: 20px; background-color: #f9f9f9;">
+                <p><strong>산업:</strong> {company_info['산업']}</p>
+                <p><strong>주소:</strong> {company_info['주소']}</p>
+                <p><strong>설립일:</strong> {company_info['설립일']}</p>
+                <p><strong>자본금:</strong> {company_info['자본금']}</p>
+                <p><strong>매출액:</strong> {company_info['매출액']}</p>
+                <p><strong>대표자:</strong> {company_info['대표자']}</p>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+    
     
     st.subheader(f"{company_info['기업명']} 합격자 통계")
     
