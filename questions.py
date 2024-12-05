@@ -65,8 +65,10 @@ def generate_answer(question):
             temperature=0.7,
         )
         return response['choices'][0]['message']['content'].strip()
+    except openai.error.OpenAIError as e:
+        return f"OpenAI API 호출 중 오류가 발생했습니다: {str(e)}"
     except Exception as e:
-        return f"오류 발생: {str(e)}"
+        return f"예기치 못한 오류가 발생했습니다: {str(e)}"
 
 # Streamlit UI 구성
 def main():
@@ -74,8 +76,9 @@ def main():
     if "selected_category" not in st.session_state:
         st.session_state.selected_category = None
 
-    st.title("산업은행 면접 준비 도우미")
+    st.title("💼산업은행 면접 준비 도우미")
     st.write("면접 질문을 선택하거나 직접 입력하면 GPT-4가 답변을 생성해 드립니다.")
+    st.write("---")
 
     # 버튼 형식의 카테고리 선택
     st.write("### 질문 카테고리를 선택하세요:")
@@ -84,13 +87,14 @@ def main():
         if cols[i].button(category):
             st.session_state.selected_category = category
 
+    st.write("---")
+
     # 선택된 카테고리에 따른 질문 표시
     if st.session_state.selected_category:
         selected_category = st.session_state.selected_category
         st.write(f"**선택한 카테고리: {selected_category}**")
         selected_question = st.selectbox(
-            "질문을 선택하세요:", 
-            ["질문을 선택하세요..."] + question_categories[selected_category]
+            "질문을 선택하세요:", question_categories[selected_category]
         )
 
         # 직접 질문 입력
@@ -98,11 +102,8 @@ def main():
 
         # 답변 생성 버튼
         if st.button("답변 생성하기"):
-            if selected_question != "질문을 선택하세요...":
-                question = selected_question
-            elif custom_question.strip():
-                question = custom_question
-            else:
+            question = custom_question.strip() if custom_question else selected_question
+            if not question:
                 st.warning("질문을 선택하거나 입력해주세요.")
                 return
 
