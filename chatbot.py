@@ -76,7 +76,7 @@ class ConversationHistory:
 
 # Streamlit에서 실행될 챗봇 UI
 def show_chatbot():
-    st.header("🤖 경제 전문가 AI 챗봇")
+    st.subheader("🤖 경제 전문가 AI 챗봇")
 
     folder_path = "./reports"
     faiss_file_path = "./faiss_index"
@@ -119,7 +119,3 @@ def show_chatbot():
 
         st.write("### 챗봇 답변:")
         st.write(response)
-
-    if st.checkbox("대화 기록 보기"):
-        st.write("### 대화 기록:")
-        st.write(st.session_state.history_manager.to_text())
