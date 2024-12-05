@@ -57,7 +57,17 @@ def display_company_info(company_info):
     )
     
     st.subheader(f"{company_info['기업명']} 최신 헤드라인")
-    
+    st.markdown(
+                    f'''
+                    <div style="border: 1px solid #ddd; border-radius: 8px; padding: 20px; background-color: #f9f9f9;">
+                        <p> 1. "글로벌 주요 증시, 미국 소비자물가 30년 만에 최고치 상승"</p>
+                        <p> 2. "미국 신규 실업수당 신청, 예상치 상회"</p>
+                        <p> 3. "중국 경제성장률, 전 분기 대비 하락세"</p>
+                        <p> 4. "유럽 연합, 코로나19로 인한 경제 위기 극복을 위한 경제 지원안 추진"</p>
+                    </div>
+                    ''',
+                    unsafe_allow_html=True,
+                )
     st.subheader(f"{company_info['기업명']} 키워드 분석")
     
     st.subheader(f"{company_info['기업명']} 합격자 통계")
