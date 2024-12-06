@@ -94,7 +94,7 @@ class CalendarApp:
             return "시험 접수"
 
     def render(self):
-        st.title("📅 금융권 채용 & 자격증 캘린더")
+        st.subheader("📅 금융권 채용 & 자격증 캘린더")
 
         # 셀렉트 박스 카테고리 선택
         categories = [
