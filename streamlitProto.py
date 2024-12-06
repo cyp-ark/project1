@@ -5,6 +5,8 @@ from chatbot import show_chatbot
 from economy_news import show_economic_trends
 from fincorpinfo import show_company_info
 from calendar_app import CalendarApp
+from questions import InterviewPrepAssistant, StreamlitUI
+
 
 # 사이드바 네비게이션
 def show_sidebar_navigation():
@@ -15,7 +17,7 @@ def show_sidebar_navigation():
         st.session_state["section"] = "경제 현황"
     if st.sidebar.button("🏢 금융 공기업 정보"):
         st.session_state["section"] = "기업 동향"
-    if st.sidebar.button("🏢 면접 예상 질문"):
+    if st.sidebar.button("💬 면접 예상 질문"):
         st.session_state["section"] = "면접 질문"
     if st.sidebar.button("🤖 챗봇"):
         st.session_state["section"] = "챗봇"
@@ -38,7 +40,11 @@ def main():
     elif st.session_state["section"] == "기업 동향":
         show_company_info()
     elif st.session_state["section"] == "면접 질문":
-        st.write('면접 질문')
+        # InterviewPrepAssistant 객체 생성
+        assistant = InterviewPrepAssistant()
+        # StreamlitUI 객체 생성 및 실행
+        ui = StreamlitUI(assistant)
+        ui.show()
     elif st.session_state["section"] == "챗봇":
         show_chatbot()
     elif st.session_state["section"] == "채용 달력":
@@ -52,4 +58,3 @@ def main():
 # 앱 실행
 if __name__ == "__main__":
     main()
-
