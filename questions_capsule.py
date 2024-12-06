@@ -1,5 +1,6 @@
-import openai
 import streamlit as st
+from langchain.chat_models import ChatOpenAI
+from langchain.prompts import ChatPromptTemplate, HumanMessagePromptTemplate
 
 class InterviewAssistant:
     def __init__(self):
@@ -52,19 +53,21 @@ class InterviewAssistant:
         }
 
     def generate_answer(self, question):
-        """Generates an answer for the given question using OpenAI API."""
+        """Generates an answer for the given question using LangChain's OpenAI integration."""
         try:
-            response = openai.ChatCompletion.create(
-                model="gpt-4",
-                messages=[
-                    {"role": "system", "content": "산업은행 면접 준비를 도와주는 AI입니다."},
-                    {"role": "user", "content": f"질문: {question}. 이에 대한 답변을 상세히 작성해주세요."}
-                ],
-                temperature=0.7,
-            )
-            return response['choices'][0]['message']['content'].strip()
-        except openai.error.OpenAIError as e:
-            return f"OpenAI API 호출 중 오류가 발생했습니다: {str(e)}"
+            # Initialize the OpenAI model via LangChain
+            llm = ChatOpenAI(model="gpt-4", temperature=0.7)
+            
+            # Create a prompt template
+            prompt = ChatPromptTemplate.from_messages([
+                ("system", "산업은행 면접 준비를 도와주는 AI입니다."),
+                ("user", f"질문: {question}. 이에 대한 답변을 상세히 작성해주세요.")
+            ])
+
+            # Generate the response
+            response = llm.invoke(prompt.format_messages())
+
+            return response['text'].strip()
         except Exception as e:
             return f"예기치 못한 오류가 발생했습니다: {str(e)}"
 
