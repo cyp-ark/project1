@@ -1,8 +1,12 @@
+# interview_prep.py
 import openai
-import streamlit as st
+from langchain_openai import ChatOpenAI
+from langchain.prompts import PromptTemplate
+from langchain.chains import LLMChain
+import os
 
 # OpenAI API 키 설정
-openai.api_key = "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"
+openai.api_key = os.getenv("OPENAI_API_KEY")
 
 # 질문 카테고리와 질문 리스트
 question_categories = {
@@ -53,65 +57,67 @@ question_categories = {
     ],
 }
 
-# OpenAI API를 호출하여 답변 생성
-def generate_answer(question):
-    try:
-        response = openai.ChatCompletion.create(
-            model="gpt-4",
-            messages=[
-                {"role": "system", "content": "산업은행 면접 준비를 도와주는 AI입니다."},
-                {"role": "user", "content": f"질문: {question}. 이에 대한 답변을 상세히 작성해주세요."}
-            ],
-            temperature=0.7,
-        )
-        return response['choices'][0]['message']['content'].strip()
-    except openai.error.OpenAIError as e:
-        return f"OpenAI API 호출 중 오류가 발생했습니다: {str(e)}"
-    except Exception as e:
-        return f"예기치 못한 오류가 발생했습니다: {str(e)}"
+class InterviewPrepAssistant:
+    def __init__(self):
+        # LangChain의 ChatOpenAI 모델을 설정
+        self.chat_openai = ChatOpenAI(model="gpt-4", temperature=0.7)
+        self.prompt_template = PromptTemplate(input_variables=["question"], template="{question}")
+        self.llm_chain = LLMChain(llm=self.chat_openai, prompt=self.prompt_template)
 
-# Streamlit UI 구성
-def main():
-    # 초기화: 세션 상태에 선택된 카테고리 저장
-    if "selected_category" not in st.session_state:
-        st.session_state.selected_category = None
+    def generate_answer(self, question):
+        """주어진 질문에 대한 답변을 생성합니다."""
+        try:
+            response = self.llm_chain.run(question=f"질문: {question}. 이에 대한 답변을 상세히 작성해주세요.")
+            return response.strip()
+        except Exception as e:
+            return f"예기치 못한 오류가 발생했습니다: {str(e)}"
 
-    st.title("💼산업은행 면접 준비 도우미")
-    st.write("면접 질문을 선택하거나 직접 입력하면 GPT-4가 답변을 생성해 드립니다.")
-    st.write("---")
+class StreamlitUI:
+    def __init__(self, assistant):
+        """Streamlit UI를 초기화하고 인터뷰 준비 도우미 객체를 설정합니다."""
+        self.assistant = assistant
 
-    # 버튼 형식의 카테고리 선택
-    st.write("### 질문 카테고리를 선택하세요:")
-    cols = st.columns(len(question_categories))
-    for i, category in enumerate(question_categories.keys()):
-        if cols[i].button(category):
-            st.session_state.selected_category = category
+    def show(self):
+        """Streamlit 인터페이스를 구성합니다."""
+        import streamlit as st
 
-    st.write("---")
+        # 초기화: 세션 상태에 선택된 카테고리 저장
+        if "selected_category" not in st.session_state:
+            st.session_state.selected_category = None
 
-    # 선택된 카테고리에 따른 질문 표시
-    if st.session_state.selected_category:
-        selected_category = st.session_state.selected_category
-        st.write(f"**선택한 카테고리: {selected_category}**")
-        selected_question = st.selectbox(
-            "질문을 선택하세요:", question_categories[selected_category]
-        )
+        st.title("💼산업은행 면접 준비 도우미")
+        st.write("면접 질문을 선택하거나 직접 입력하면 GPT-4가 답변을 생성해 드립니다.")
+        st.write("---")
 
-        # 직접 질문 입력
-        custom_question = st.text_input("직접 질문을 입력하세요 (선택 사항):")
+        # 버튼 형식의 카테고리 선택
+        st.write("### 질문 카테고리를 선택하세요:")
+        cols = st.columns(len(question_categories))
+        for i, category in enumerate(question_categories.keys()):
+            if cols[i].button(category):
+                st.session_state.selected_category = category
 
-        # 답변 생성 버튼
-        if st.button("답변 생성하기"):
-            question = custom_question.strip() if custom_question else selected_question
-            if not question:
-                st.warning("질문을 선택하거나 입력해주세요.")
-                return
+        st.write("---")
 
-            st.info(f"질문: {question}")
-            with st.spinner("답변을 생성 중입니다..."):
-                answer = generate_answer(question)
-            st.success("답변 생성 완료!")
-            st.write(answer)
+        # 선택된 카테고리에 따른 질문 표시
+        if st.session_state.selected_category:
+            selected_category = st.session_state.selected_category
+            st.write(f"**선택한 카테고리: {selected_category}**")
+            selected_question = st.selectbox(
+                "질문을 선택하세요:", question_categories[selected_category]
+            )
 
-if __name__ == "__main__":
-    main()
+            # 직접 질문 입력
+            custom_question = st.text_input("직접 질문을 입력하세요 (선택 사항):")
+
+            # 답변 생성 버튼
+            if st.button("답변 생성하기"):
+                question = custom_question.strip() if custom_question else selected_question
+                if not question:
+                    st.warning("질문을 선택하거나 입력해주세요.")
+                    return
+
+                st.info(f"질문: {question}")
+                with st.spinner("답변을 생성 중입니다..."):
+                    answer = self.assistant.generate_answer(question)
+                st.success("답변 생성 완료!")
+                st.write(answer)
