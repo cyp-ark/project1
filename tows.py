@@ -91,15 +91,26 @@ def plot_tows_with_labels(data):
         ax.add_patch(wedge)
 
     # 텍스트 추가
-    positions = [(-0.7, 0.7), (0.7, 0.7), (0.7, -0.7), (-0.7, -0.7)]
-    text_colors = ['blue', 'orange', 'green', 'red']
+    positions = [(-0.9, 0.9), (0.9, 0.9), (0.9, -0.9), (-0.9, -0.9)]
+    text_colors = ['black', 'black', 'black', 'black']  # 글씨 색을 모두 검정으로 변경
+
 
     for idx, (pos, category) in enumerate(zip(positions, categories)):
-        text_content = f"{category}\n" + "\n".join(data[category][:4])  # 최대 4개의 항목 표시
-        ax.text(pos[0], pos[1], text_content, ha='center', fontsize=10, color=text_colors[idx])
+        # 줄바꿈을 추가하여 항목 나열
+        items = "\n".join(f"- {line}" for line in data[category][:4])  # 최대 4개의 항목 표시
+        text_content = f"{category}\n{items}"
+        ax.text(
+            pos[0], 
+            pos[1], 
+            text_content, 
+            ha='center', 
+            fontsize=18,  # 글씨 크기 적당히 조정
+            color=text_colors[idx],
+            wrap=True  # 텍스트 줄바꿈 허용
+        )
 
     # 중앙에 TOWS 표시
-    ax.text(0, 0, "TOWS", ha='center', va='center', fontsize=16, fontweight='bold')
+    ax.text(0, 0, "TOWS", ha='center', va='center', fontsize='20', fontweight='bold')
 
     # 시각화 조정
     ax.set_xlim(-1.2, 1.2)
