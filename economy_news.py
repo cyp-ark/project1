@@ -6,9 +6,14 @@ import streamlit as st
 
 # 경제 현황 섹션
 def show_economic_trends():
+    df = pd.read_csv('trend_df.csv',encoding='cp949')
+    df.drop('Unnamed: 0',axis=1,inplace=True)
+    top_keyword = df['keyword'].value_counts().head(10).index.tolist()
+    top_df = df[df['keyword'].isin(top_keyword)]
+    pivot_df = top_df.pivot_table(index='month',columns='keyword',values='keyword',aggfunc='size', fill_value=0)
     
     """키워드별 최근 이슈를 표시하는 섹션"""
-    st.subheader("📈 11월 경제뉴스 헤드라인")
+    st.subheader("📈 11월 경제 이슈")
 
     st.markdown(
                     f'''
@@ -26,4 +31,6 @@ def show_economic_trends():
     st.image("./image/wordcloud.png",use_column_width=False)
     
     st.subheader('📉 경제 트렌드 분석')
-    st.image("./image/trend.png",use_column_width=False)
+    st.line_chart(pivot_df,height=600, use_container_width=True)
+    
+    
