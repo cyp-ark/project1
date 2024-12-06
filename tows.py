@@ -125,17 +125,17 @@ st.write("OpenAI의 GPT를 사용하여 TOWS 분석을 생성하고 시각화합
 
 # 사용자 입력
 company_name = st.text_input("분석 대상 회사명을 입력하세요:", "KDB산업은행")
-if st.button("TOWS 분석 생성"):
+if st.button("🔄TOWS 분석 생성"):
     # TOWS 분석 생성
     analysis = generate_tows_analysis(company_name)
     if "에러 발생" not in analysis:
         # 분석 결과 출력
-        st.subheader("TOWS 분석 결과")
+        st.subheader("✔️TOWS 분석 결과")
         st.markdown(f"```\n{analysis}\n```")
 
         # 분석 결과 시각화
         tows_dict = parse_tows_analysis(analysis)
-        st.subheader("TOWS 분석 시각화")
+        st.subheader("✔️TOWS 분석 시각화")
         plot_tows_with_labels(tows_dict)
     else:
         st.error(f"오류 발생: {analysis}")
