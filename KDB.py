@@ -60,10 +60,10 @@ class KDBAnalysisApp:
 
         # 기본급
         with col1:
-            st.subheader("기본급 변화")
+            st.write("기본급 변화")
             st.bar_chart(basic_salary_data.set_index("년도"))
 
-            if st.button("기본급 AI 분석"):
+            if st.button("💡 기본급 AI 분석"):
                 with st.spinner("AI가 기본급 데이터를 분석 중입니다..."):
                     prompt = "다음 기본급 데이터를 분석하고 주요 패턴을 두 문장으로 요약하세요:\n" + basic_salary_data.to_string(index=False)
                     result = self.llm.predict(prompt)
@@ -71,10 +71,10 @@ class KDBAnalysisApp:
 
         # 성과상여금
         with col2:
-            st.subheader("성과상여금 변화")
+            st.write("성과상여금 변화")
             st.line_chart(performance_data.set_index("년도"))
 
-            if st.button("성과상여금 AI 분석"):
+            if st.button("💡 성과상여금 AI 분석"):
                 with st.spinner("AI가 성과상여금 데이터를 분석 중입니다..."):
                     prompt = "다음 성과상여금 데이터를 분석하고 주요 패턴을 두 문장으로 요약하세요:\n" + performance_data.to_string(index=False)
                     result = self.llm.predict(prompt)
@@ -82,10 +82,10 @@ class KDBAnalysisApp:
 
         # 평균 근속연수
         with col3:
-            st.subheader("평균근속연수 변화")
+            st.write("평균근속연수 변화")
             st.line_chart(tenure_data.set_index("년도"))
 
-            if st.button("평균근속연수 AI 분석"):
+            if st.button("💡 평균근속연수 AI 분석"):
                 with st.spinner("AI가 평균근속연수 데이터를 분석 중입니다..."):
                     prompt = "다음 평균근속연수 데이터를 분석하고 주요 패턴을 두 문장으로 요약하세요:\n" + tenure_data.to_string(index=False)
                     result = self.llm.predict(prompt)
@@ -118,7 +118,7 @@ class KDBAnalysisApp:
 
         # 서류전형 분석 버튼
         with col1:
-            if st.button("서류전형 분석"):
+            if st.button("💡 서류전형 분석"):
                 with st.spinner("AI가 서류전형 데이터를 분석 중입니다..."):
                     prompt = f"취업 준비생에게 도움이 될 수 있도록 서류전형 관련 데이터를 분석하여 주요 패턴과 인사이트를 2문장 이내로 짧게 도출하세요:\n{self.load_data().to_string(index=False)}"
                     st.session_state["document_analysis"] = self.llm.predict(prompt)
@@ -127,7 +127,7 @@ class KDBAnalysisApp:
 
         # 필기전형 분석 버튼
         with col2:
-            if st.button("필기전형 분석"):
+            if st.button("💡 필기전형 분석"):
                 with st.spinner("AI가 필기전형 데이터를 분석 중입니다..."):
                     prompt = f"취업 준비생에게 도움이 될 수 있도록 필기전형 관련 데이터를 분석하여 주요 패턴과 인사이트를 2문장 이내로 짧게 도출하세요:\n{self.load_data().to_string(index=False)}"
                     st.session_state["written_analysis"] = self.llm.predict(prompt)
@@ -136,7 +136,7 @@ class KDBAnalysisApp:
 
         # 최종 결과 분석 버튼
         with col3:
-            if st.button("최종 결과 분석"):
+            if st.button("💡 최종 결과 분석"):
                 with st.spinner("AI가 최종 데이터를 분석 중입니다..."):
                     prompt = f"취업 준비생에게 도움이 될 수 있도록 최종 경쟁률 관련 데이터를 분석하여 주요 패턴과 인사이트를 2문장 이내로 짧게 도출하세요:\n{self.load_data().to_string(index=False)}"
                     st.session_state["final_analysis"] = self.llm.predict(prompt)
