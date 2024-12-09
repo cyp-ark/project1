@@ -28,7 +28,7 @@ question_categories = {
         "창업이라는 특이한 이력을 갖고 있는데, 본인이 담당했던 포지션은 무엇인지?",
         "벤처기업 지원에 관심이 있다고 했는데, 정책금융을 통해 투자 및 지원이 반드시 필요하다고 생각하는 분야는 어디인가?",
         "IT분야든 3차 서비스 분야든 일단 수익이 발생하는 분야부터 지원해야 한다는 의견에 대해 어떻게 생각하는지?",
-        "산언은행 모바일 뱅킹과 다른 은행의 모바일 뱅킹 차이점은 무엇인가요?",
+        "산업은행 모바일 뱅킹과 다른 은행의 모바일 뱅킹 차이점은 무엇인가요?",
         "한국산업은행에 관련한 최근 이슈를 말해보세요",
         "산업은행담당자라면 어떤 기업의 M&A를 주선하겠는가?",
         "기업의 존재 이유는 뭐라고 생각합니까?",
@@ -67,7 +67,7 @@ class InterviewPrepAssistant:
     def generate_answer(self, question):
         """주어진 질문에 대한 답변을 생성합니다."""
         try:
-            response = self.llm_chain.run(question=f"질문: {question}. 이에 대한 답변을 상세히 작성해주세요.")
+            response = self.llm_chain.run(question=f"면접 질문: {question}. 이에 대한 면접 답변을 상세히 작성해주세요.")
             return response.strip()
         except Exception as e:
             return f"예기치 못한 오류가 발생했습니다: {str(e)}"
