@@ -4,14 +4,14 @@ import matplotlib.pyplot as plt
 from matplotlib import rc
 from PIL import Image
 import os
-from langchain.chat_models import ChatOpenAI
+from langchain_openai import ChatOpenAI
 import plotly.graph_objects as go
 
 # 한글 폰트 설정
 rc('font', family='Malgun Gothic')  # Windows 사용 시
 
 # OpenAI API Key 설정
-openai_api_key = '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'
+openai_api_key = os.getenv("OPENAI_API_KEY")
 os.environ['OPENAI_API_KEY'] = openai_api_key
 
 # LangChain ChatOpenAI 모델 설정
@@ -25,14 +25,14 @@ st.title("데이터 분석 및 시각화")
 st.write("재무제표, KDB 합격자 통계, 산업은행 급여 데이터를 시각화하고 분석합니다.")
 
 # 데이터 선택 옵션
-option = st.sidebar.selectbox(
+option = st.selectbox(
     "분석할 데이터를 선택하세요",
     ("재무제표 시각화", "KDB 한국산업은행 합격자 통계", "산업은행 급여 데이터 분석")
 )
 
 if option == "재무제표 시각화":
     st.subheader("재무제표 시각화")
-    financial_option = st.sidebar.selectbox(
+    financial_option = st.selectbox(
         "시각화할 항목을 선택하세요",
         ("재무상태표", "포괄손익계산서", "연결재무상태표", "연결포괄손익계산서")
     )
@@ -102,16 +102,18 @@ elif option == "KDB 한국산업은행 합격자 통계":
         "서류/최종 경쟁률": [29.7, 36.1, 43.52, 71.52, 60.07, 43.71]
     }
     df = pd.DataFrame(data)
-    st.dataframe(df)
-
-    st.subheader("서류전형 응시인원 및 합격인원")
-    st.bar_chart(df.set_index("년도")[["서류전형 응시인원", "서류전형 합격인원"]])
-
-    st.subheader("필기전형 응시율 및 합격률")
-    st.line_chart(df.set_index("년도")[["필기전형 응시율", "필기전형 합격률"]])
-
-    st.subheader("경쟁률 비교")
-    st.line_chart(df.set_index("년도")[["서류전형 경쟁률", "서류/최종 경쟁률"]])
+    
+    col1, col2, col3 = st.columns(3)
+    
+    with col1:
+        st.subheader("서류전형 응시인원 및 합격인원")
+        st.bar_chart(df.set_index("년도")[["서류전형 응시인원", "서류전형 합격인원"]])
+    with col2:
+        st.subheader("필기전형 응시율 및 합격률")
+        st.line_chart(df.set_index("년도")[["필기전형 응시율", "필기전형 합격률"]])
+    with col3:
+        st.subheader("경쟁률 비교")
+        st.line_chart(df.set_index("년도")[["서류전형 경쟁률", "서류/최종 경쟁률"]])
 
     st.subheader("AI 분석 결과")
     with st.spinner("AI가 데이터를 분석 중입니다..."):
@@ -159,13 +161,16 @@ elif option == "산업은행 급여 데이터 분석":
         ])
         fig1.update_layout(title="", xaxis_title="년도", yaxis_title="금액 (백만원)")
         st.plotly_chart(fig1, use_container_width=True)
+        
+        if 'result' not in st.session_state:
+            st.session_state.result = None
 
         if st.button("기본급 AI 분석"):
             with st.spinner("AI가 기본급 데이터를 분석 중입니다..."):
                 prompt = "다음 기본급 데이터를 분석하고 주요 패턴을 두 문장으로 요약하세요:\n" + basic_salary_data.to_string(index=False)
-                result = llm.predict(prompt)
-                st.write("### AI 분석 결과:")
-                st.write(result)
+                st.session_state.result = llm.predict(prompt)
+        if st.session_state.result:
+            st.write(st.session_state.result)
 
     with col2:
         st.subheader("성과상여금 변화")
@@ -174,13 +179,16 @@ elif option == "산업은행 급여 데이터 분석":
         ])
         fig2.update_layout(title="", xaxis_title="년도", yaxis_title="금액 (백만원)")
         st.plotly_chart(fig2, use_container_width=True)
+        
+        if 'result' not in st.session_state:
+            st.session_state.result = None
 
         if st.button("성과상여금 AI 분석"):
             with st.spinner("AI가 성과상여금 데이터를 분석 중입니다..."):
                 prompt = "다음 성과상여금 데이터를 분석하고 주요 패턴을 두 문장으로 요약하세요:\n" + performance_data.to_string(index=False)
-                result = llm.predict(prompt)
-                st.write("### AI 분석 결과:")
-                st.write(result)
+                st.session_state.result = llm.predict(prompt)
+        if st.session_state.result:
+            st.write(st.session_state.result)
 
     with col3:
         st.subheader("평균근속연수 변화")
@@ -194,5 +202,4 @@ elif option == "산업은행 급여 데이터 분석":
             with st.spinner("AI가 평균근속연수 데이터를 분석 중입니다..."):
                 prompt = "다음 평균근속연수 데이터를 분석하고 주요 패턴을 두 문장으로 요약하세요:\n" + tenure_data.to_string(index=False)
                 result = llm.predict(prompt)
-                st.write("### AI 분석 결과:")
                 st.write(result)
