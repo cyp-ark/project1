@@ -5,8 +5,10 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from PIL import Image
 import streamlit as st
+from dotenv import load_dotenv
 
 plt.rcParams['font.family'] = 'AppleGothic'  # 또는 'NanumGothic' 사용 가능
+load_dotenv()
 
 def get_financial_data(financial_option):
     if financial_option == "재무상태표":
