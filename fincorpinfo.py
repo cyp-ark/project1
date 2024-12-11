@@ -6,7 +6,7 @@ from financial_visualization import main
 
 # 현재 디렉토리와 CSV 파일 경로 설정
 base_dir = os.getcwd()
-csv_file_path = os.path.join(base_dir, "corpinfo.csv")
+csv_file_path = os.path.join(base_dir, "./data/corpinfo.csv")
 
 # CSV 데이터 읽기 함수
 def load_data_from_csv(file_path):
