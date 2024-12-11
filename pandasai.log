@@ -1,0 +1,16 @@
+2024-12-09 11:37:15 [INFO] Question: 일본의 판매량에 대한 막대 그래프를 그려줘
+2024-12-09 11:37:15 [INFO] Running PandasAI with openai LLM...
+2024-12-09 11:37:15 [INFO] Prompt ID: a6f1aaa3-f3ca-4ffe-8267-f5bb8622eeca
+2024-12-09 11:37:15 [INFO] Executing Pipeline: GenerateChatPipeline
+2024-12-09 11:37:15 [INFO] Executing Step 0: ValidatePipelineInput
+2024-12-09 11:37:15 [INFO] Executing Step 1: CacheLookup
+2024-12-09 11:37:15 [INFO] Executing Step 2: PromptGeneration
+2024-12-09 11:37:15 [ERROR] Pipeline failed on step 2: 'Index' object has no attribute '_format_native_types'
+2024-12-09 11:37:58 [INFO] Question: 일본의 판매량에 대한 막대 그래프를 그려줘
+2024-12-09 11:37:58 [INFO] Running PandasAI with openai LLM...
+2024-12-09 11:37:58 [INFO] Prompt ID: 2b826439-3b54-47b5-9d4a-d01e4a7fc247
+2024-12-09 11:37:58 [INFO] Executing Pipeline: GenerateChatPipeline
+2024-12-09 11:37:58 [INFO] Executing Step 0: ValidatePipelineInput
+2024-12-09 11:37:58 [INFO] Executing Step 1: CacheLookup
+2024-12-09 11:37:58 [INFO] Executing Step 2: PromptGeneration
+2024-12-09 11:37:58 [ERROR] Pipeline failed on step 2: 'Index' object has no attribute '_format_native_types'
