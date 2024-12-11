@@ -1,12 +1,11 @@
 import streamlit as st
 import pandas as pd
 from langchain_openai import ChatOpenAI
-import os
+from dotenv import load_dotenv
 
 class KDBAnalysisApp:
     def __init__(self):
-        self.api_key = os.getenv("OPENAI_API_KEY")
-        self.llm = ChatOpenAI(model="gpt-4o", api_key=self.api_key)
+        self.llm = ChatOpenAI(model="gpt-4o")
 
     def load_data(self) -> pd.DataFrame:
         """Load and return the KDB analysis dataset."""
@@ -144,6 +143,7 @@ class KDBAnalysisApp:
                 st.write(st.session_state["final_analysis"])
 
     def run(self):
+        load_dotenv()
         """Run the Streamlit app."""
         df = self.load_data()
         self.plot_charts(df)
@@ -158,5 +158,6 @@ class KDBAnalysisApp:
 
 
 if __name__ == "__main__":
+    load_dotenv()
     app = KDBAnalysisApp()
     app.run()
