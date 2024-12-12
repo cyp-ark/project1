@@ -1,8 +1,6 @@
 import os
 import pandas as pd
 import streamlit as st
-from KDB import KDBAnalysisApp
-from financial_visualization import main
 
 # 현재 디렉토리와 CSV 파일 경로 설정
 base_dir = os.getcwd()
@@ -92,10 +90,6 @@ def display_company_info(company_info):
     st.subheader("🎯 합격자 통계")
     
     
-    # 합격자, 급여 데이터 분석 앱 실행
-    app = KDBAnalysisApp()
-    app.run()
-    main()
 
 # 기업 정보 표시 섹션
 def show_company_info():
