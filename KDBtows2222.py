@@ -1,4 +1,5 @@
 import streamlit as st
+<<<<<<< Updated upstream
 from PyPDF2 import PdfReader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_openai import OpenAIEmbeddings
@@ -8,88 +9,88 @@ from langchain.document_loaders import PyPDFLoader
 from langchain.vectorstores import FAISS
 import openai
 import os
+=======
+from langchain_openai import ChatOpenAI
+import matplotlib.pyplot as plt
+from matplotlib.patches import Wedge
+import platform
+from matplotlib import rc
+from dotenv import load_dotenv
+>>>>>>> Stashed changes
 
-# OpenAI API 키 설정
-openai.api_key = "OPENAI_API_KEY"
+load_dotenv()
 
-# Streamlit App
-st.title("KDB 미래전략연구소 PDF 분석 및 TOWS 요약")
+# 한글 폰트 설정
+if platform.system() == "Windows":
+    rc('font', family='Malgun Gothic')  # Windows
+elif platform.system() == "Darwin":
+    rc('font', family='AppleGothic')  # macOS
+else:
+    rc('font', family='NanumGothic')  # Linux (NanumGothic 필요)
+plt.rcParams['axes.unicode_minus'] = False  # 마이너스 기호 깨짐 방지
 
-# FAISS 인덱스 생성 및 로드 함수
-def create_or_load_faiss_index(folder_path, faiss_file_path, chunk_size=1000, chunk_overlap=100):
-    text_splitter = RecursiveCharacterTextSplitter(chunk_size=chunk_size, chunk_overlap=chunk_overlap)
-    embeddings = OpenAIEmbeddings()
 
-    if os.path.exists(faiss_file_path):
-        vector_store = FAISS.load_local(faiss_file_path, embeddings, allow_dangerous_deserialization=True)
-    else:
-        all_docs = []
-        for root, _, files in os.walk(folder_path):
-            for file_name in files:
-                if file_name.endswith(".pdf"):
-                    file_path = os.path.join(root, file_name)
-                    loader = PyPDFLoader(file_path)
-                    documents = loader.load()
-                    docs = text_splitter.split_documents(documents)
-                    all_docs.extend(docs)
-
-        vector_store = FAISS.from_documents(all_docs, embeddings)
-        vector_store.save_local(faiss_file_path)
-    return vector_store
-
-# TOWS 분석 생성 함수
 def generate_tows_analysis(company_name):
-    """OpenAI API를 사용하여 TOWS 분석 생성"""
+    """LangChain OpenAI를 사용하여 TOWS 분석 생성"""
     prompt = f"""
+    당신은 분석 레포트를 쓰는 전문가 입니다. A4용지 한페이지 정도의 분량으로 각 항목마다 1-2가지 요인씩 자세하지만 깔끔하게 요약 정리 해주세요.
     다음 회사에 대한 TOWS 분석을 작성해주세요.
     회사명: {company_name}
 
     아래 형식으로 작성해주세요:
-    위협 (Threats):
-    - 항목 1
-    - 항목 2
+    위협 (Threats): KDB 산업은행의 위협 요인
 
-    기회 (Opportunities):
-    - 항목 1
-    - 항목 2
+    기회 (Opportunities): KDB 산업은행의 기회 요인
 
-    약점 (Weaknesses):
-    - 항목 1
-    - 항목 2
+    약점 (Weaknesses): KDB 산업은행의 약점
 
-    강점 (Strengths):
-    - 항목 1
-    - 항목 2
+    강점 (Strengths): KDB 산업은행의 강점
     """
     try:
-        response = openai.ChatCompletion.create(
-            model="gpt-4",
-            messages=[
-                {"role": "system", "content": "당신은 한국어로 TOWS 분석을 제공하는 유용한 어시스턴트입니다."},
-                {"role": "user", "content": prompt}
-            ],
-            temperature=0.7,
-            max_tokens=500
-        )
-        return response["choices"][0]["message"]["content"]
+        llm = ChatOpenAI(model="gpt-4", temperature=0.7)
+        response = llm.predict(prompt)
+        return response.strip()
     except Exception as e:
         return f"에러 발생: {str(e)}"
 
-# Predefined paths
-pdf_folder_path = "C:/Users/Admin/Documents/GitHub/project1/kdb미래전략연구소"  # Path to the folder containing predefined PDFs
-faiss_file_path = "C://Users//Admin//Documents//GitHub//project1//faiss_index"
 
-# Load or Create FAISS Index
-if os.path.exists(pdf_folder_path):
-    st.info("FAISS 인덱스를 생성하거나 로드 중입니다...")
-    vector_store = create_or_load_faiss_index(pdf_folder_path, faiss_file_path)
-    st.success("FAISS 인덱스 로드 완료!")
+def parse_tows_analysis(analysis_text):
+    """TOWS 분석 텍스트를 딕셔너리로 변환"""
+    categories = {
+        "위협": "Threat (위협)",
+        "기회": "Opportunity (기회)",
+        "약점": "Weakness (약점)",
+        "강점": "Strength (강점)",
+    }
+    tows_dict = {v: [] for v in categories.values()}
+    current_category = None
 
-    # Querying TOWS Analysis
-    company_name = st.text_input("TOWS 분석을 수행할 회사명을 입력하세요:", "산업은행")
-    if company_name:
-        analysis_result = generate_tows_analysis(company_name)
-        st.write("**TOWS 분석 결과**")
-        st.markdown(analysis_result)
-else:
-    st.error("사전 정의된 PDF 폴더를 찾을 수 없습니다. 경로를 확인하세요.")
+    for line in analysis_text.split("\n"):
+        line = line.strip()
+        for keyword, category in categories.items():
+            if line.startswith(keyword):
+                current_category = category
+                break
+        if current_category and line.startswith("-"):
+            tows_dict[current_category].append(line.lstrip("- ").strip())
+
+    return tows_dict
+
+
+
+# Streamlit 앱
+st.title("🔍 기업별 TOWS 분석")
+st.write("OpenAI의 GPT를 사용하여 TOWS 분석을 생성합니다.")
+
+# 사용자 입력
+company_name = st.text_input("분석 대상 회사명을 입력하세요:", "KDB산업은행")
+if st.button("🔄TOWS 분석 생성"):
+    # TOWS 분석 생성
+    analysis = generate_tows_analysis(company_name)
+    if "에러 발생" not in analysis:
+        # 분석 결과 출력
+        st.subheader("✔️TOWS 분석 결과")
+        st.write(f"\n{analysis}\n")
+
+    else:
+        st.error(f"오류 발생: {analysis}")
