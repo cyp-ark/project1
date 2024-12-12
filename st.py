@@ -24,7 +24,6 @@ def show_sidebar_navigation():
     if st.sidebar.button("📅 채용 달력"):
         st.session_state["section"] = "채용 달력"
 
-
 # 메인 실행 함수
 def main():
     # Streamlit 앱

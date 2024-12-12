@@ -1,7 +1,5 @@
 import fincorpinfo
 
-
-
 def run():
     fincorpinfo.show_company_info()
 
