@@ -5,6 +5,7 @@ from langchain_openai import OpenAIEmbeddings
 from langchain.chat_models import ChatOpenAI
 from langchain.vectorstores import FAISS
 from langchain.document_loaders import PyPDFLoader
+from langchain.vectorstores import FAISS
 import openai
 import os
 
