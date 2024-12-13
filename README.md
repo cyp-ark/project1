@@ -1,5 +1,7 @@
-# project1
+# KPMG Future Academy 2기 프로젝트1 3조
 
-```
-streamlit run st.py
-```
+```python==3.11.10```
+
+```pip install -r requirements.txt```
+
+```streamlit run st.py```
