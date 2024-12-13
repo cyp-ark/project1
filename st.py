@@ -8,8 +8,6 @@ import interview_supporter
 import chatbot
 import calendar_app
 
-
-
 # 사이드바 네비게이션
 def show_sidebar_navigation():
     """사이드바 네비게이션"""
