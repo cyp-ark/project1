@@ -7,7 +7,7 @@ import os
 
 # 경제 현황 섹션
 def show():
-    base_path = os.getcwd()
+    base_path = os.path.dirname(__file__)
     csv_file_path = os.path.join(base_path, 'data/trend_df.csv')
     df = pd.read_csv(csv_file_path,encoding='cp949')
     df.drop('Unnamed: 0',axis=1,inplace=True)
