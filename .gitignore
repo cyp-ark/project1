@@ -1,6 +1,5 @@
 *.pdf
 *.xlsx
-*.csv
 *.parquet
 *.env
 .DS_Store
