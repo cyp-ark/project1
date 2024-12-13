@@ -6,7 +6,7 @@ import streamlit as st
 
 # 경제 현황 섹션
 def show():
-    df = pd.read_csv('trend_df.csv',encoding='cp949')
+    df = pd.read_csv('./data/trend_df.csv',encoding='cp949')
     df.drop('Unnamed: 0',axis=1,inplace=True)
     top_keyword = df['keyword'].value_counts().head(10).index.tolist()
     top_df = df[df['keyword'].isin(top_keyword)]
