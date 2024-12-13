@@ -76,7 +76,7 @@ class ConversationHistory:
         )
 
 # Streamlit에서 실행될 챗봇 UI
-def show_chatbot():
+def show():
     st.title("🤖 경제 전문가 AI 챗봇")
 
     folder_path = "./reports"
