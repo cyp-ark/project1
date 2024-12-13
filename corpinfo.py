@@ -260,7 +260,7 @@ class SalaryInfo:
             self._analysis("평균근속연수",bar=False)
 
 def show():
-    base_dir = os.getcwd()
+    base_dir = os.path.dirname(__file__)
     csv_file_path = os.path.join(base_dir, "./data/corpinfo.csv")
     json_file_path = os.path.join(base_dir, "./data/data.json")
 
