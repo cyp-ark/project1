@@ -42,7 +42,8 @@ def create_qa_chain():
         temperature=0,
         openai_api_key=api_key,       # OpenAI API 키
         model_name="gpt-4o",         # gpt-4o 모델 지정
-        max_retries=3                # 최대 재시도 횟수
+        max_retries=3,                # 최대 재시도 횟수
+        streaming=True,            # 스트림 사용
     )
 
     custom_prompt = PromptTemplate(
@@ -76,10 +77,19 @@ class ConversationHistory:
 
 # Streamlit에서 실행될 챗봇 UI
 def show_chatbot():
-    st.subheader("🤖 경제 전문가 AI 챗봇")
+    st.title("🤖 경제 전문가 AI 챗봇")
 
     folder_path = "./reports"
     faiss_file_path = "./faiss_index"
+    
+    # 대화 기록 및 QA 체인 초기화
+    # 대화 저장 공간 초기화
+    if "messages" not in st.session_state:
+        st.session_state.messages = [{"role": "assistant", "content": "안녕하세요! 경제 전문가 AI 챗봇입니다. 질문을 입력하시면 도움을 드리겠습니다."}]
+    # 이전 대화 표시
+    for message in st.session_state.messages:
+        with st.chat_message(message["role"]):
+            st.markdown(message["content"])
 
     if "history_manager" not in st.session_state:
         st.session_state.history_manager = ConversationHistory()
@@ -90,12 +100,17 @@ def show_chatbot():
     if "vector_store" not in st.session_state:
         st.session_state.vector_store = create_or_load_faiss_index(folder_path, faiss_file_path)
 
-    user_query = st.text_input("질문을 입력하세요:", "")
+    user_query = st.chat_input("질문을 입력하세요:")
 
+    # 사용자 질문에 대한 챗봇 응답을 스트리밍으로 출력
     if user_query:
         vector_store = st.session_state.vector_store
         qa_chain = st.session_state.qa_chain
         history_manager = st.session_state.history_manager
+
+        st.session_state.messages.append({"role": "user", "content": user_query})
+        with st.chat_message("user"):
+            st.markdown(user_query)
 
         try:
             retrieved_docs = vector_store.similarity_search(user_query, k=5)
@@ -107,15 +122,34 @@ def show_chatbot():
                 for doc in retrieved_docs
             ]
             history_text = history_manager.to_text()
+
+            # 스트리밍된 메시지 처리
             response = qa_chain.invoke({
                 "context": documents,
                 "question": user_query,
                 "history": history_text
             })
-            history_manager.add_entry(user_query, response)
+
+            # 스트리밍된 응답 처리
+            if isinstance(response, list):
+                for chunk in response:
+                    # 각 청크의 'text' 키를 사용하여 출력
+                    st.session_state.messages.append({"role": "assistant", "content": chunk['text']})
+                    with st.chat_message("assistant"):
+                        st.markdown(chunk['text'])
+            else:
+                # 스트리밍이 아닌 경우에는 전체 응답을 처리
+                st.session_state.messages.append({"role": "assistant", "content": response})
+                with st.chat_message("assistant"):
+                    st.markdown(response)
+
+            history_manager.add_entry(user_query, response[-1]['text'] if isinstance(response, list) else response)
             st.session_state.history_manager = history_manager
         except Exception as e:
             response = f"오류 발생: {e}"
+            st.session_state.messages.append({"role": "assistant", "content": response})
+            with st.chat_message("assistant"):
+                st.markdown(response)
 
-        st.write("### 챗봇 답변:")
-        st.write(response)
+if __name__ == "__main__":
+    show_chatbot()
