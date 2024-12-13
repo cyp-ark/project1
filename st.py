@@ -1,11 +1,10 @@
 import os
 import streamlit as st
 import pandas as pd
-from chatbot import show_chatbot
+import chatbot
 from economy_news import show_economic_trends
-#from fincorpinfo import show_company_info
-from calendar_app import CalendarApp
-from questions import InterviewPrepAssistant, StreamlitUI
+import calendar_app
+import interview_supporter
 import corpinfo
 
 # 사이드바 네비게이션
@@ -39,19 +38,11 @@ def main():
     elif st.session_state["section"] == "기업 동향":
         corpinfo.show()
     elif st.session_state["section"] == "면접 질문":
-        # InterviewPrepAssistant 객체 생성
-        assistant = InterviewPrepAssistant()
-        # StreamlitUI 객체 생성 및 실행
-        ui = StreamlitUI(assistant)
-        ui.show()
+        interview_supporter.show()
     elif st.session_state["section"] == "챗봇":
-        show_chatbot()
+        chatbot.show()
     elif st.session_state["section"] == "채용 달력":
-        # CalendarApp 객체 생성
-        app = CalendarApp()
-
-        # 캘린더 렌더링
-        app.render()
+        calendar_app.show()
         
 
 # 앱 실행
