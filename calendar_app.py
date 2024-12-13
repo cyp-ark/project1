@@ -115,7 +115,9 @@ class CalendarApp:
         # 캘린더 출력
         calendar(events=filtered_events, options=self.calendar_options)
 
-
-if __name__ == "__main__":
+def show():
     app = CalendarApp()
     app.render()
+
+if __name__ == "__main__":
+    show()
