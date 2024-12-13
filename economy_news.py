@@ -1,12 +1,15 @@
 import pandas as pd
 import streamlit as st
+import os
 
 # 샘플 키워드 및 최근 이슈 데이터 생성 - 자동 업데이트되게 수정해야함
 
 
 # 경제 현황 섹션
 def show():
-    df = pd.read_csv('./data/trend_df.csv',encoding='cp949')
+    base_path = os.getcwd()
+    csv_file_path = os.path.join(base_path, 'data/trend_df.csv')
+    df = pd.read_csv(csv_file_path,encoding='cp949')
     df.drop('Unnamed: 0',axis=1,inplace=True)
     top_keyword = df['keyword'].value_counts().head(10).index.tolist()
     top_df = df[df['keyword'].isin(top_keyword)]
