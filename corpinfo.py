@@ -1,4 +1,3 @@
-#fincorpinfo.py
 import os
 import json
 import platform
