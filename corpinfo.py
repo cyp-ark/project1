@@ -122,8 +122,9 @@ class CompanyInfo:
 
 
 class FinancialVisualization:
-    def __init__(self, json_path):
+    def __init__(self, json_path, image_path):
         self.json_path = json_path
+        self.image_path = image_path
         self.financial_data = self._load_financial_data()
 
     def _load_financial_data(self):
@@ -149,7 +150,7 @@ class FinancialVisualization:
         st.pyplot(fig)
     
     def display_image(self,financial_option):
-        img_path = f'./image/{financial_option}.jpg'
+        img_path = os.path.join(self.image_path, f'{financial_option}.jpg')
         if os.path.exists(img_path):
             img = Image.open(img_path)
             st.image(img, caption=financial_option)
@@ -263,6 +264,7 @@ def show():
     base_dir = os.path.dirname(__file__)
     csv_file_path = os.path.join(base_dir, "./data/corpinfo.csv")
     json_file_path = os.path.join(base_dir, "./data/data.json")
+    image_file_path = os.path.join(base_dir, "./image")
 
     app = CompanyInfo(csv_file_path)
     app.show()
@@ -270,7 +272,7 @@ def show():
     recruit_app.show()
     salary_app = SalaryInfo(json_file_path)
     salary_app.show()
-    financial_app = FinancialVisualization(json_file_path)
+    financial_app = FinancialVisualization(json_file_path,image_file_path)
     financial_app.show()
 
 # Streamlit 실행
