@@ -5,7 +5,7 @@ import streamlit as st
 
 
 # 경제 현황 섹션
-def show_economic_trends():
+def show():
     df = pd.read_csv('trend_df.csv',encoding='cp949')
     df.drop('Unnamed: 0',axis=1,inplace=True)
     top_keyword = df['keyword'].value_counts().head(10).index.tolist()
@@ -33,4 +33,5 @@ def show_economic_trends():
     st.subheader('📉 경제 트렌드 분석')
     st.line_chart(pivot_df,height=600, use_container_width=True)
     
-    
+if __name__ == "__main__":
+    show()
