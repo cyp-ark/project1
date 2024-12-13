@@ -1,22 +1,7 @@
 import streamlit as st
-<<<<<<< Updated upstream
-from PyPDF2 import PdfReader
-from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain_openai import OpenAIEmbeddings
-from langchain.chat_models import ChatOpenAI
-from langchain.vectorstores import FAISS
-from langchain.document_loaders import PyPDFLoader
-from langchain.vectorstores import FAISS
-import openai
-import os
-=======
 from langchain_openai import ChatOpenAI
-import matplotlib.pyplot as plt
-from matplotlib.patches import Wedge
 import platform
-from matplotlib import rc
 from dotenv import load_dotenv
->>>>>>> Stashed changes
 
 load_dotenv()
 
@@ -38,13 +23,13 @@ def generate_tows_analysis(company_name):
     회사명: {company_name}
 
     아래 형식으로 작성해주세요:
-    위협 (Threats): KDB 산업은행의 위협 요인
+    위협 (Threats): {company_name}의 위협 요인
 
-    기회 (Opportunities): KDB 산업은행의 기회 요인
+    기회 (Opportunities): {company_name}의 기회 요인
 
-    약점 (Weaknesses): KDB 산업은행의 약점
+    약점 (Weaknesses): {company_name}의 약점
 
-    강점 (Strengths): KDB 산업은행의 강점
+    강점 (Strengths): {company_name}의 강점
     """
     try:
         llm = ChatOpenAI(model="gpt-4", temperature=0.7)
