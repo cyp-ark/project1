@@ -37,7 +37,7 @@ def main():
     if st.session_state.get("section", "경제 현황") == "경제 현황":
         show_economic_trends()    
     elif st.session_state["section"] == "기업 동향":
-        corpinfo.run()
+        corpinfo.show()
     elif st.session_state["section"] == "면접 질문":
         # InterviewPrepAssistant 객체 생성
         assistant = InterviewPrepAssistant()
