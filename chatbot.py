@@ -77,7 +77,7 @@ class ConversationHistory:
 
 # Streamlit에서 실행될 챗봇 UI
 def show():
-    st.title("🤖 경제 전문가 AI 챗봇")
+    st.subheader("🤖 경제 전문가 AI 챗봇")
 
     folder_path = "./reports"
     faiss_file_path = "./faiss_index"
