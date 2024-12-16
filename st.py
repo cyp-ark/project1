@@ -7,9 +7,13 @@ import corpinfo
 import interview_supporter
 import chatbot
 import calendar_app
+from cp_search import CompanySearch, show_company_search_section  # cp_search.py에서 CompanySearch 클래스와 show_company_search_section 함수를 가져옴
+
+# 파일 경로 설정
+# CORP_FILE_PATH = "/Users/pjh_air/Desktop/bootcamp/플젝1_정리본/project1-main/corp_list_2.xlsx"
 
 # 사이드바 네비게이션
-def show_sidebar_navigation():
+def show_sidebar_navigation():  
     """사이드바 네비게이션"""
     st.sidebar.title("📊 메뉴")
     # 섹션 이동 버튼
@@ -23,6 +27,8 @@ def show_sidebar_navigation():
         st.session_state["section"] = "챗봇"
     if st.sidebar.button("📅 채용 달력"):
         st.session_state["section"] = "채용 달력"
+    if st.sidebar.button("🔍 기업 검색"):
+        st.session_state["section"] = "기업 검색"
 
 # 메인 실행 함수
 def main():
@@ -30,7 +36,7 @@ def main():
     st.set_page_config(page_title="경제금융기업 AI 활용 취업 지원 서비스", layout="wide")
     st.title("📊 경제금융기업 AI 활용 취업 지원 서비스")
     
-    # 사이드바 네비게이션 표시
+    # 사이드바 네비게이션
     show_sidebar_navigation()
 
     # 현재 활성화된 섹션에 따라 해당 함수 호출
@@ -44,7 +50,8 @@ def main():
         chatbot.show()
     elif st.session_state["section"] == "채용 달력":
         calendar_app.show()
-        
+    elif st.session_state["section"] == "기업 검색":
+        show_company_search_section()  # 이제 이 함수가 정의되어 있으므로 오류가 발생하지 않음
 
 # 앱 실행
 if __name__ == "__main__":
