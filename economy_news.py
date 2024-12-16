@@ -32,7 +32,7 @@ def show():
     
     st.subheader('🔑 경제 키워드 분석')
     image_path = os.path.join(base_path, 'image/wordcloud.png')
-    st.image(image_path,use_container_width=False)
+    st.image(image_path,use_container_width=True)
     
     st.subheader('📉 경제 트렌드 분석')
     st.line_chart(pivot_df,height=600, use_container_width=True)
