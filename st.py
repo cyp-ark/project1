@@ -9,8 +9,6 @@ import chatbot
 import calendar_app
 from cp_search import CompanySearch, show_company_search_section  # cp_search.py에서 CompanySearch 클래스와 show_company_search_section 함수를 가져옴
 
-# 파일 경로 설정
-# CORP_FILE_PATH = "/Users/pjh_air/Desktop/bootcamp/플젝1_정리본/project1-main/corp_list_2.xlsx"
 
 # 사이드바 네비게이션
 def show_sidebar_navigation():  
