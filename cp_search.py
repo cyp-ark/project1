@@ -36,8 +36,12 @@ def show_company_search_section():
         st.session_state["query"] = query
         st.session_state["results"] = company_search.search_similar_names(query, limit=8)
 
-    # 추천 검색어 표시
-    if st.session_state["results"]:
-        st.write("🔍 **추천 검색어**")
-        for result in st.session_state["results"]:
-            st.markdown(f"- **{result}**")
+    # 입력된 쿼리에 대한 정확한 일치 여부 확인
+    if query in company_search.corp_names:
+        st.write(f"✅ **일치하는 기업은 `{query}` 입니다.**")
+    else:
+        # 추천 검색어 표시
+        if st.session_state["results"]:
+            st.write("🔍 **추천 검색어**")
+            for result in st.session_state["results"]:
+                st.markdown(f"- **{result}**")
