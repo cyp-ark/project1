@@ -6,7 +6,7 @@ class CompanySearch:
     def __init__(self, file_path):
         """초기화 및 기업 데이터 로드."""
         self.file_path = file_path
-        self.df = pd.read_excel(file_path)
+        self.df = pd.read_csv(file_path)
         self.corp_names = self.df['corp_name'].tolist()
         
     def search_similar_names(self, query, limit=8):
@@ -21,7 +21,7 @@ def show_company_search_section():
     st.write("기업명을 검색하세요")
 
     # CompanySearch 클래스 초기화
-    file_path = "/Users/pjh_air/Desktop/bootcamp/플젝1_정리본/project1-main/corp_list_2.xlsx"
+    file_path = "data/corp_list_2.csv"
     company_search = CompanySearch(file_path)
 
     # 세션 상태 초기화
