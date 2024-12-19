@@ -1,8 +1,8 @@
 import os
 import streamlit as st
 from dotenv import load_dotenv
-from langchain_openai import ChatOpenAI
 from langchain.prompts import PromptTemplate
+from langchain_google_genai import ChatGoogleGenerativeAI
 
 # 질문 카테고리와 질문 리스트
 questions = {
@@ -61,10 +61,7 @@ if not openai_api_key:
     
 def show():
     # LangChain OpenAI 모델 설정
-    llm = ChatOpenAI(
-        model = "gpt-4o",
-        temperature=0.5,
-        )
+    llm = ChatGoogleGenerativeAI(model="gemini-1.5-pro",temperature=0.5)
 
     # 답변 캐싱 함수
     @st.cache_data
