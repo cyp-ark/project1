@@ -6,7 +6,7 @@ import streamlit as st
 import matplotlib.pyplot as plt
 from PIL import Image
 from dotenv import load_dotenv
-from langchain_openai import ChatOpenAI
+from langchain_google_genai import ChatGoogleGenerativeAI
 
 # 운영체제에 따라 폰트 설정
 if platform.system() == 'Windows':
@@ -183,7 +183,7 @@ class RecruitInfo:
     def __init__(self, json_file_path):
         self.json_file_path = json_file_path
         self.data = self._load_data()
-        self.llm = ChatOpenAI(model="gpt-4o")
+        self.llm = ChatGoogleGenerativeAI(model="gemini-1.5-pro")
     def _load_data(self):
         try:
             with open(self.json_file_path, 'r', encoding='utf-8') as f:
@@ -222,7 +222,7 @@ class SalaryInfo:
     def __init__(self, json_file_path):
         self.json_file_path = json_file_path
         self.data = self._load_data()
-        self.llm = ChatOpenAI(model="gpt-4o")
+        self.llm = ChatGoogleGenerativeAI(model="gemini-1.5-pro")
     def _load_data(self):
         try:
             with open(self.json_file_path, 'r', encoding='utf-8') as f:
