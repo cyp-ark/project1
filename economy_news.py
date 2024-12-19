@@ -113,7 +113,7 @@ class keyword_analysis:
         img_path = os.path.join(self.img_file_path, 'wordcloud.png')
         img = Image.open(img_path)
         st.subheader('🔑 경제 키워드 분석')
-        st.image(img, use_column_width=True)
+        st.image(img, use_column_width=False)
         
 class trend_analysis:
     def __init__(self, csv_file_path):
