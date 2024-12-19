@@ -1,4 +1,5 @@
 import os
+from dotenv import load_dotenv
 from langchain.document_loaders import PyPDFLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_openai import OpenAIEmbeddings
@@ -8,6 +9,12 @@ from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain.prompts import PromptTemplate
 from langchain.docstore.document import Document
 import streamlit as st
+
+# 환경변수 로드
+google_api_key = os.getenv("GOOGLE_API_KEY")
+if not google_api_key:
+    load_dotenv()
+    google_api_key = os.getenv("GOOGLE_API_KEY")
 
 # FAISS 인덱스 생성 및 로드 함수
 def create_or_load_faiss_index(folder_path, faiss_file_path, chunk_size=1000, chunk_overlap=100):
@@ -33,11 +40,6 @@ def create_or_load_faiss_index(folder_path, faiss_file_path, chunk_size=1000, ch
 
 # QA 체인 및 프롬프트 설정 함수
 def create_qa_chain():
-    # OpenAI API 키 확인
-    api_key = os.getenv("OPENAI_API_KEY")
-    if not api_key:
-        raise ValueError("OPENAI_API_KEY 환경 변수를 설정하거나 API 키를 제공해야 합니다.")
-
     # llm 초기화
     llm = ChatGoogleGenerativeAI(model="gemini-1.5-pro")
 
@@ -97,7 +99,7 @@ def show():
 
     user_query = st.chat_input("질문을 입력하세요:")
 
-    # 사용자 질문에 대한 챗봇 응답을 스트리밍으로 출력
+
     if user_query:
         vector_store = st.session_state.vector_store
         qa_chain = st.session_state.qa_chain
@@ -124,19 +126,10 @@ def show():
                 "question": user_query,
                 "history": history_text
             })
-
-            # 스트리밍된 응답 처리
-            if isinstance(response, list):
-                for chunk in response:
-                    # 각 청크의 'text' 키를 사용하여 출력
-                    st.session_state.messages.append({"role": "assistant", "content": chunk['text']})
-                    with st.chat_message("assistant"):
-                        st.markdown(chunk['text'])
-            else:
-                # 스트리밍이 아닌 경우에는 전체 응답을 처리
-                st.session_state.messages.append({"role": "assistant", "content": response})
-                with st.chat_message("assistant"):
-                    st.markdown(response)
+            
+            st.session_state.messages.append({"role": "assistant", "content": response})
+            with st.chat_message("assistant"):
+                st.markdown(response)
 
             history_manager.add_entry(user_query, response[-1]['text'] if isinstance(response, list) else response)
             st.session_state.history_manager = history_manager
@@ -147,4 +140,4 @@ def show():
                 st.markdown(response)
 
 if __name__ == "__main__":
-    show_chatbot()
+    show()
