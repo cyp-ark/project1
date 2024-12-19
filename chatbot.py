@@ -1,7 +1,8 @@
 import os
 from langchain.document_loaders import PyPDFLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain_openai import OpenAIEmbeddings, ChatOpenAI
+from langchain_openai import OpenAIEmbeddings
+from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain.vectorstores import FAISS
 from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain.prompts import PromptTemplate
@@ -37,14 +38,8 @@ def create_qa_chain():
     if not api_key:
         raise ValueError("OPENAI_API_KEY 환경 변수를 설정하거나 API 키를 제공해야 합니다.")
 
-    # ChatOpenAI 초기화
-    llm = ChatOpenAI(
-        temperature=0,
-        openai_api_key=api_key,       # OpenAI API 키
-        model_name="gpt-4o",         # gpt-4o 모델 지정
-        max_retries=3,                # 최대 재시도 횟수
-        streaming=True,            # 스트림 사용
-    )
+    # llm 초기화
+    llm = ChatGoogleGenerativeAI(model="gemini-1.5-pro")
 
     custom_prompt = PromptTemplate(
         input_variables=["context", "question", "history"],
